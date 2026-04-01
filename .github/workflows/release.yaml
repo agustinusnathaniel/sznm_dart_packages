@@ -73,20 +73,8 @@ jobs:
           fi
         continue-on-error: true
 
-      - name: Check for Version Changes
-        id: changes
+      - name: Push Version Changes
         run: |
-          if git diff --quiet; then
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-          else
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Commit and Push Version Changes
-        if: steps.changes.outputs.has_changes == 'true'
-        run: |
-          git add -A
-          git commit -m "chore(release): publish packages [skip ci]"
           git push
           git push --tags
 
@@ -105,16 +93,11 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
       - name: Create Release
-        uses: actions/create-release@v1
+        run: npx changelogithub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ matrix.tag }}
-          release_name: Release ${{ matrix.tag }}
-          draft: false
-          prerelease: false
-          body: |
-            Automated release created by GitHub Actions.
-            
-            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
