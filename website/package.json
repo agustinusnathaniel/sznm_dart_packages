@@ -1,15 +1,17 @@
 {
   "name": "sznm_dart_packages_docs",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": "agustinusnathaniel",
   "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@10.28.0",
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
-    "serve": "vitepress serve"
+    "preview": "vitepress preview"
   },
   "devDependencies": {
-    "vitepress": "^1.0.0-alpha.21",
-    "vue": "^3.2.41"
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.0"
   }
 }

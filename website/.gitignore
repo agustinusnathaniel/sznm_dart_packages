@@ -1,4 +1,8 @@
-node_modules
+# VitePress dist
+.vitepress/dist
+
+# Dependencies
+node_modules/
 *.log*
 .cache
 .output
