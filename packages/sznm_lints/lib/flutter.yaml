@@ -2,6 +2,7 @@ include: package:flutter_lints/flutter.yaml
 
 linter:
   rules:
+    # Additional strict rules beyond flutter_lints
     - always_declare_return_types
     - always_put_control_body_on_new_line
     - always_put_required_named_parameters_first
@@ -10,7 +11,6 @@ linter:
     - avoid_dynamic_calls
     - avoid_equals_and_hash_code_on_mutable_classes
     - avoid_field_initializers_in_const_classes
-    - avoid_init_to_null
     - avoid_slow_async_io
     - avoid_type_to_string
     - avoid_unused_constructor_parameters
@@ -23,7 +23,6 @@ linter:
     - leading_newlines_in_multiline_strings
     - no_adjacent_strings_in_list
     - null_check_on_nullable_type_parameter
-    - null_closures
     - package_api_docs
     - prefer_asserts_in_initializer_lists
     - prefer_foreach
@@ -33,12 +32,14 @@ linter:
     - require_trailing_commas
     - sort_constructors_first
     - sort_unnamed_constructors_first
+    - strict_top_level_inference
     - test_types_in_equals
     - throw_in_finally
     - tighten_type_of_initializing_formals
     - unnecessary_null_checks
     - unnecessary_parenthesis
     - unnecessary_statements
+    - unnecessary_underscores
     - use_is_even_rather_than_modulo
     - use_late_for_private_fields_and_variables
     - use_named_constants

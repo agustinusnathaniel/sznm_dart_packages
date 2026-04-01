@@ -1,0 +1,83 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Flutter
+        uses: koji-1009/setup-flutter@v1
+        with:
+          flutter-version-file: '.fvmrc'
+
+      - name: Setup Melos
+        run: dart pub global activate melos
+
+      - name: Bootstrap Workspace
+        run: dart run melos bootstrap
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create Release Version
+        id: release
+        run: |
+          dart --disable-dart-dev pub global run melos version --yes
+          
+          # Capture created tags
+          echo "tags_created=$(git tag --points-at HEAD | jq -R -s -c 'split("\n") | map(select(length > 0))')" >> $GITHUB_OUTPUT
+          
+          # Check if any tags were created
+          if git tag --points-at HEAD | grep -q .; then
+            echo "releases_created=true" >> $GITHUB_OUTPUT
+          else
+            echo "releases_created=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+
+      - name: Check for Version Changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and Push Version Changes
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git add -A
+          git commit -m "chore(release): publish packages [skip ci]"
+          git push
+          git push --tags
+
+      - name: Create GitHub Releases
+        if: steps.release.outputs.releases_created == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Create release for each tag created in this run
+          for tag in $(git tag --points-at HEAD); do
+            echo "Creating release for $tag"
+            gh release create "$tag" \
+              --title "Release $tag" \
+              --notes "Automated release. See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details." \
+              --generate-notes
+          done

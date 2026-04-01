@@ -1,7 +1,3 @@
-# fvm files
-.fvm/flutter_sdk
-
-# env variables
 .env
 .env.*
 
@@ -39,3 +35,6 @@ coverage.lcov
 build/
 
 .vscode/settings.json
+
+# FVM Version Cache
+.fvm/

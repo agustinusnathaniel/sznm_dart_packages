@@ -1,7 +1,7 @@
 {
   "name": "sznm_dart_packages_docs",
   "version": "1.0.0",
-  "author": "sozonome",
+  "author": "agustinusnathaniel",
   "license": "MIT",
   "scripts": {
     "dev": "vitepress dev",
