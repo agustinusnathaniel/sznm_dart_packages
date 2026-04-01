@@ -49,7 +49,7 @@ git push origin main
 dart run melos version --yes
 
 # Or specify version manually
-dart run melos version sznm_lints:2.0.0 --yes
+dart run melos version --manual-version=sznm_lints:2.0.0 --yes
 ```
 
 This will:
