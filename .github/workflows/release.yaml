@@ -83,7 +83,7 @@ jobs:
     needs: release
     if: ${{ needs.release.outputs.releases_created == 'true' }}
     permissions:
-      id-token: write
+      id-token: write # Required for OIDC authentication
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -105,5 +105,6 @@ jobs:
         run: dart run melos run publish-dry-run
 
       - name: Publish to pub.dev
-        working-directory: packages/sznm_lints
-        run: dart pub publish --force
+        uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+        with: 
+          working-directory: packages/sznm_lints
