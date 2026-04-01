@@ -1,7 +1,3 @@
-# fvm files
-.fvmrc
-
-# env variables
 .env
 .env.*
 
