@@ -71,17 +71,30 @@ sznm_dart_packages/
 
 ### GitHub Actions Setup
 
-For CI/CD workflows, use the official FVM action:
+For CI/CD workflows, use the latest official actions:
 
 ```yaml
-- name: Setup FVM
-  uses: flutter-actions/setup-fvm@v1
+- name: Checkout
+  uses: actions/checkout@v6
+
+- name: Setup Dart
+  uses: dart-lang/setup-dart@v1.7.2
+
+- name: Install FVM
+  run: dart pub global activate fvm
 
 - name: Use Flutter Version from .fvmrc
-  run: echo yes | fvm use
+  run: fvm use
 ```
 
-This automatically reads the `.fvmrc` file and installs the correct Flutter version.
+**Action versions used:**
+- `actions/checkout@v6` - Latest stable (Jan 2026)
+- `dart-lang/setup-dart@v1.7.2` - Latest stable (Mar 2026)
+
+This approach:
+- Uses the official `dart-lang/setup-dart` action
+- Installs FVM globally
+- Reads `.fvmrc` automatically to install the correct Flutter version
 
 ---
 
