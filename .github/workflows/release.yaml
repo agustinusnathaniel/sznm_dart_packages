@@ -53,7 +53,7 @@ jobs:
             # Manual version override
             echo "Manual version: ${{ github.event.inputs.package }}:${{ github.event.inputs.version }}"
             dart --disable-dart-dev pub global run melos version \
-              ${{ github.event.inputs.package }}:${{ github.event.inputs.version }} \
+              --manual-version="${{ github.event.inputs.package }}:${{ github.event.inputs.version }}" \
               --yes
           else
             # Automatic versioning from commits
