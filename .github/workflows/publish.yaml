@@ -1,0 +1,39 @@
+name: Publish to pub.dev
+
+on:
+  push:
+    tags:
+      - "sznm_lints-v*"
+
+jobs:
+  publish:
+    name: Publish to pub.dev
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for OIDC authentication
+    steps:
+      - name: Checkout at tag
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Flutter
+        uses: koji-1009/setup-flutter@v1
+        with:
+          flutter-version-file: '.fvmrc'
+
+      - name: Setup Melos
+        run: dart pub global activate melos
+
+      - name: Bootstrap Workspace
+        run: dart run melos bootstrap
+
+      - name: Verify Publish Readiness
+        run: dart run melos run publish-dry-run
+
+      - name: Setup Token
+        uses: dart-lang/setup-dart@v1
+
+      - name: Publish to pub.dev
+        working-directory: packages/sznm_lints
+        run: dart pub publish --force

@@ -8,7 +8,11 @@ How to release new versions of `sznm_dart_packages`.
 
 ## Overview
 
-This project uses **manual release triggers** with GitHub Actions and Melos. You control when to release via the Actions UI.
+This project uses a **hybrid release process**:
+- **Release (version + tag)**: Done locally on your machine
+- **Publish**: Automated via GitHub Actions with OIDC authentication
+
+This approach is required because GitHub Actions cannot trigger `on.push.tags` workflows from other workflows (GitHub security feature).
 
 ## Release Flow
 
@@ -28,9 +32,9 @@ flowchart LR
 
 ## Step-by-Step Guide
 
-### Option 1: Manual Release via GitHub Actions (Recommended)
+### Option 1: Release Locally, Publish via GitHub Actions (Recommended)
 
-#### 1. Commit Your Changes
+#### 1. Commit with Conventional Commits
 
 ```bash
 git add .
@@ -38,36 +42,37 @@ git commit -m "feat: add new lint rule"
 git push origin main
 ```
 
-#### 2. Trigger Release Workflow
+#### 2. Run Melos Version Locally
 
-1. Go to **Actions** → **Release**
-2. Click **Run workflow**
-3. Choose release type:
+```bash
+# Automatic versioning from commits
+dart run melos version --yes
 
-   **Automatic** (based on conventional commits):
-   - Leave **Package** empty
-   - Leave **Version** empty
-   - Click **Run workflow**
+# Or specify version manually
+dart run melos version sznm_lints:2.0.0 --yes
+```
 
-   **Manual** (specific version):
-   - **Package**: `sznm_lints`
-   - **Version**: `2.0.0`
-   - Click **Run workflow**
+This will:
+- ✅ Update `pubspec.yaml` version
+- ✅ Update `CHANGELOG.md`
+- ✅ Create git commit
+- ✅ Create git tag (e.g., `sznm_lints-v2.0.0`)
 
-#### 3. Workflow Automatically
+#### 3. Push Tags to GitHub
 
-The workflow will:
-- ✅ Run `melos version`
-- ✅ Update `pubspec.yaml` and `CHANGELOG.md`
-- ✅ Create git tag
-- ✅ Push to remote
-- ✅ Create GitHub release
-- ✅ Trigger publish to pub.dev
+```bash
+git push --follow-tags
+```
 
-#### 4. When to Use
+#### 4. GitHub Actions Publishes Automatically
 
-- **Automatic**: When you have conventional commits (`feat:`, `fix:`, etc.)
-- **Manual**: When you need to force a specific version
+The `publish.yaml` workflow triggers from your tag push:
+- ✅ Detects tag `sznm_lints-v*`
+- ✅ Checks out the tag
+- ✅ Runs verification
+- ✅ Publishes to pub.dev using OIDC
+
+**Done!** Your package is published.
 
 ### Option 2: Manual Command Line
 
