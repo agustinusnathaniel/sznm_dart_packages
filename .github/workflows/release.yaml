@@ -84,10 +84,14 @@ jobs:
     if: ${{ needs.release.outputs.releases_created == 'true' }}
     permissions:
       id-token: write # Required for OIDC authentication
+    strategy:
+      matrix:
+        tag: ${{ fromJSON(needs.release.outputs.tags_created || '[]') }}
     steps:
-      - name: Checkout
+      - name: Checkout at tag
         uses: actions/checkout@v6
         with:
+          ref: ${{ matrix.tag }}
           fetch-depth: 0
 
       - name: Setup Flutter
