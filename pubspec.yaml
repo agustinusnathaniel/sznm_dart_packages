@@ -11,7 +11,7 @@ dev_dependencies:
   melos: ^7.3.0
 
 melos:
-  repository: https://github.com/sozonome/sznm_dart_packages
+  repository: https://github.com/agustinusnathaniel/sznm_dart_packages
 
   command:
     version:

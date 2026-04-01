@@ -55,7 +55,7 @@ sznm_dart_packages/
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/sozonome/sznm_dart_packages.git
+   git clone https://github.com/agustinusnathaniel/sznm_dart_packages.git
    cd sznm_dart_packages
    ```
 
