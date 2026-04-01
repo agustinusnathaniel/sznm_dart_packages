@@ -1,0 +1,78 @@
+name: sznm_dart_packages
+publish_to: none
+
+environment:
+  sdk: ^3.11.0
+
+workspace:
+  - packages/sznm_lints
+
+dev_dependencies:
+  melos: ^7.3.0
+
+melos:
+  repository: https://github.com/sozonome/sznm_dart_packages
+
+  command:
+    version:
+      linkToCommits: true
+      includeCommitId: true
+      # Conventional commit types that trigger version bumps
+      # feat: minor, fix/perf/refactor/docs/bug/revert: patch, breaking change: major
+      dependOnConventionalCommits:
+        - feat
+        - fix
+        - perf
+        - refactor
+        - docs
+        - bug
+        - revert
+      changelog: true
+      gitTagVersion: true
+      updateGitTagRefs: false
+      message: |
+        chore(release): publish packages
+        
+        {new_package_versions}
+    bootstrap:
+      usePubspecOverrides: true
+
+  scripts:
+    analyze:
+      run: dart analyze packages
+      description: Analyze all packages in the workspace.
+
+    test:
+      run: flutter test
+      exec:
+        concurrency: 1
+      description: Run tests for all packages.
+
+    format:
+      run: dart format .
+      description: Format all Dart code in the workspace.
+
+    format-check:
+      run: dart format --set-exit-if-changed .
+      description: Check if all Dart code is formatted.
+
+    verify:
+      run: ./scripts/verify.sh
+      description: Run full verification before publishing.
+
+    publish-dry-run:
+      run: cd packages/sznm_lints && (dart pub publish --dry-run || true)
+      description: Dry-run publish for sznm_lints package.
+
+    # Release management (wrappers around melos version/publish)
+    release:
+      run: dart --disable-dart-dev pub global run melos version --yes
+      description: Version packages based on conventional commits.
+
+    release-dry-run:
+      run: dart --disable-dart-dev pub global run melos version --no-git-commit-version --no-git-tag-version --yes
+      description: Preview version changes without committing.
+    
+    publish-all:
+      run: dart --disable-dart-dev pub global run melos publish --yes
+      description: Publish all packages to pub.dev.
