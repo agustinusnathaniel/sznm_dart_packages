@@ -69,6 +69,20 @@ sznm_dart_packages/
    fvm dart run melos bootstrap
    ```
 
+### GitHub Actions Setup
+
+For CI/CD workflows, use the official FVM action:
+
+```yaml
+- name: Setup FVM
+  uses: flutter-actions/setup-fvm@v1
+
+- name: Use Flutter Version from .fvmrc
+  run: echo yes | fvm use
+```
+
+This automatically reads the `.fvmrc` file and installs the correct Flutter version.
+
 ---
 
 ## Commands Reference

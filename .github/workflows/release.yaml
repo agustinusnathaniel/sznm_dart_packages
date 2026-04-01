@@ -20,9 +20,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup FVM
-        uses: leoafarias/fvm-action@v1
-        with:
-          flutter-version: 3.41.5
+        uses: flutter-actions/setup-fvm@v1
+
+      - name: Use Flutter Version from .fvmrc
+        run: echo yes | fvm use
 
       - name: Setup Melos
         run: dart pub global activate melos
