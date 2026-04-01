@@ -3,6 +3,16 @@ name: Release
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Package name (e.g., sznm_lints)'
+        required: false
+        default: ''
+      version:
+        description: 'Version to release (e.g., 2.0.0). Leave empty for automatic versioning.'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -38,7 +48,17 @@ jobs:
       - name: Create Release Version
         id: release
         run: |
-          dart --disable-dart-dev pub global run melos version --yes
+          if [ -n "${{ github.event.inputs.version }}" ] && [ -n "${{ github.event.inputs.package }}" ]; then
+            # Manual version override
+            echo "Manual version: ${{ github.event.inputs.package }}:${{ github.event.inputs.version }}"
+            dart --disable-dart-dev pub global run melos version \
+              ${{ github.event.inputs.package }}:${{ github.event.inputs.version }} \
+              --yes
+          else
+            # Automatic versioning from commits
+            echo "Automatic versioning from commits"
+            dart --disable-dart-dev pub global run melos version --yes
+          fi
           
           # Capture created tags
           echo "tags_created=$(git tag --points-at HEAD | jq -R -s -c 'split("\n") | map(select(length > 0))')" >> $GITHUB_OUTPUT
