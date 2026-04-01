@@ -104,7 +104,9 @@ jobs:
       - name: Verify Publish Readiness
         run: dart run melos run publish-dry-run
 
+      - name: Setup Token
+        uses: dart-lang/setup-dart@v1
+
       - name: Publish to pub.dev
-        uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
-        with: 
-          working-directory: packages/sznm_lints
+        working-directory: packages/sznm_lints
+        run: dart pub publish --force
