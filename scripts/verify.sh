@@ -19,22 +19,39 @@ pass() { echo -e "${GREEN}✓${NC} $1"; }
 fail() { echo -e "${RED}✗${NC} $1"; exit 1; }
 warn() { echo -e "${YELLOW}!${NC} $1"; }
 
-# Check FVM
-echo "1. Checking FVM setup..."
+# Detect Dart/Flutter command
+if command -v flutter &> /dev/null; then
+    DART_CMD="dart"
+    FLUTTER_VERSION=$(flutter --version | head -1)
+    echo "Using Flutter SDK"
+    echo "   $FLUTTER_VERSION"
+elif command -v fvm &> /dev/null && [ -f ".fvmrc" ]; then
+    DART_CMD="fvm dart"
+    FVM_VERSION=$(cat .fvmrc | grep flutter | cut -d'"' -f4)
+    echo "Using FVM"
+    echo "   Flutter version: $FVM_VERSION"
+else
+    DART_CMD="dart"
+    echo "Using system Dart"
+fi
+
+# Check .fvmrc (if using FVM or koji-1009/setup-flutter)
+echo ""
+echo "1. Checking version config..."
 if [ -f ".fvmrc" ]; then
     pass ".fvmrc exists"
     FVM_VERSION=$(cat .fvmrc | grep flutter | cut -d'"' -f4)
     echo "   Flutter version: $FVM_VERSION"
 else
-    fail ".fvmrc not found"
+    warn ".fvmrc not found (CI will use latest stable)"
 fi
 
 # Check Melos
 echo ""
 echo "2. Checking Melos workspace..."
-if fvm dart run melos list > /dev/null 2>&1; then
+if $DART_CMD run melos list > /dev/null 2>&1; then
     pass "Melos workspace bootstrapped"
-    echo "   Packages: $(fvm dart run melos list | wc -l | tr -d ' ')"
+    echo "   Packages: $($DART_CMD run melos list | wc -l | tr -d ' ')"
 else
     fail "Melos workspace not bootstrapped"
 fi
@@ -42,7 +59,7 @@ fi
 # Check formatting
 echo ""
 echo "3. Checking code formatting..."
-if fvm dart format --set-exit-if-changed packages/ > /dev/null 2>&1; then
+if $DART_CMD format --set-exit-if-changed packages/ > /dev/null 2>&1; then
     pass "All code is formatted"
 else
     fail "Code formatting issues found"
@@ -51,7 +68,7 @@ fi
 # Check analysis
 echo ""
 echo "4. Running static analysis..."
-if fvm dart analyze packages/ > /dev/null 2>&1; then
+if $DART_CMD analyze packages/ > /dev/null 2>&1; then
     pass "No analysis issues"
 else
     fail "Analysis errors found"
@@ -63,7 +80,7 @@ echo "5. Checking publish readiness..."
 for pkg in packages/*/; do
     pkg_name=$(basename "$pkg")
     echo "   Checking $pkg_name..."
-    if (cd "$pkg" && fvm dart pub publish --dry-run 2>&1 | grep -q "Sorry"); then
+    if (cd "$pkg" && $DART_CMD pub publish --dry-run 2>&1 | grep -q "Sorry"); then
         fail "$pkg_name has publish errors"
     else
         pass "$pkg_name can publish"
@@ -73,7 +90,7 @@ done
 # Check for outdated dependencies
 echo ""
 echo "6. Checking dependencies..."
-OUTDATED=$(fvm dart pub outdated 2>&1 | grep -v "all dependencies are up-to-date" | grep -v "transitive" | grep -v "Package Name" | grep -v "^$" | grep -v "Showing outdated" | grep "\*" | head -1 || true)
+OUTDATED=$($DART_CMD pub outdated 2>&1 | grep -v "all dependencies are up-to-date" | grep -v "transitive" | grep -v "Package Name" | grep -v "^$" | grep -v "Showing outdated" | grep "\*" | head -1 || true)
 if [ -z "$OUTDATED" ]; then
     pass "All direct dependencies up-to-date"
 else
