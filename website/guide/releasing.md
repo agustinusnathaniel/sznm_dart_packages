@@ -8,26 +8,29 @@ How to release new versions of `sznm_dart_packages`.
 
 ## Overview
 
-This project uses **automated releases** with GitHub Actions and Melos. Releases are triggered by conventional commit messages.
+This project uses **manual release triggers** with GitHub Actions and Melos. You control when to release via the Actions UI.
 
-## Automated Release Flow
+## Release Flow
 
 ```mermaid
-graph LR
-    A[Push commits] --> B[GitHub Actions]
-    B --> C[melos version]
-    C --> D[Update pubspec.yaml]
-    C --> E[Update CHANGELOG]
-    C --> F[Create git tag]
-    F --> G[publish.yaml]
-    G --> H[Publish to pub.dev]
+flowchart LR
+    A[Commit changes] --> B[Push to main]
+    B --> C[Trigger Release workflow]
+    C --> D[melos version]
+    D --> E[Update pubspec.yaml]
+    D --> F[Update CHANGELOG]
+    D --> G[Create git tag]
+    G --> H[Push tags]
+    H --> I[Create GitHub release]
+    I --> J[publish.yaml]
+    J --> K[Publish to pub.dev]
 ```
 
 ## Step-by-Step Guide
 
-### Option 1: Automated (Recommended)
+### Option 1: Manual Release via GitHub Actions (Recommended)
 
-#### 1. Commit with Conventional Commits
+#### 1. Commit Your Changes
 
 ```bash
 git add .
@@ -35,25 +38,38 @@ git commit -m "feat: add new lint rule"
 git push origin main
 ```
 
-#### 2. GitHub Actions Handles the Rest
+#### 2. Trigger Release Workflow
 
-The `release.yaml` workflow automatically:
-- ✅ Runs `melos version`
-- ✅ Updates `pubspec.yaml` version
-- ✅ Updates `CHANGELOG.md`
-- ✅ Creates git tag (`sznm_lints-v2.0.1`)
-- ✅ Creates GitHub release
+1. Go to **Actions** → **Release**
+2. Click **Run workflow**
+3. Choose release type:
 
-#### 3. Automatic Publishing
+   **Automatic** (based on conventional commits):
+   - Leave **Package** empty
+   - Leave **Version** empty
+   - Click **Run workflow**
 
-The `publish.yaml` workflow:
-- ✅ Detects new tag
-- ✅ Runs verification
-- ✅ Publishes to pub.dev
+   **Manual** (specific version):
+   - **Package**: `sznm_lints`
+   - **Version**: `2.0.0`
+   - Click **Run workflow**
 
-**Done!** Your package is published.
+#### 3. Workflow Automatically
 
-### Option 2: Manual Release
+The workflow will:
+- ✅ Run `melos version`
+- ✅ Update `pubspec.yaml` and `CHANGELOG.md`
+- ✅ Create git tag
+- ✅ Push to remote
+- ✅ Create GitHub release
+- ✅ Trigger publish to pub.dev
+
+#### 4. When to Use
+
+- **Automatic**: When you have conventional commits (`feat:`, `fix:`, etc.)
+- **Manual**: When you need to force a specific version
+
+### Option 2: Manual Command Line
 
 #### 1. Verify Changes
 
