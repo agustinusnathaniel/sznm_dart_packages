@@ -23,13 +23,13 @@ jobs:
         run: dart pub global activate melos
 
       - name: Bootstrap Workspace
-        run: flutter run melos bootstrap
+        run: dart run melos bootstrap
 
       - name: Check Format
-        run: flutter run melos run format-check
+        run: dart run melos run format-check
 
       - name: Analyze
-        run: flutter run melos run analyze
+        run: dart run melos run analyze
 
   verify:
     name: Verify Publish Readiness
@@ -48,10 +48,10 @@ jobs:
         run: dart pub global activate melos
 
       - name: Bootstrap Workspace
-        run: flutter run melos bootstrap
+        run: dart run melos bootstrap
 
       - name: Run Verification
         run: ./scripts/verify.sh
 
       - name: Publish Dry-Run
-        run: flutter run melos run publish-dry-run
+        run: dart run melos run publish-dry-run

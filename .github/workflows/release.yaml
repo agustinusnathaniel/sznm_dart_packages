@@ -28,7 +28,7 @@ jobs:
         run: dart pub global activate melos
 
       - name: Bootstrap Workspace
-        run: flutter run melos bootstrap
+        run: dart run melos bootstrap
 
       - name: Configure Git
         run: |

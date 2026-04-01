@@ -26,11 +26,11 @@ jobs:
         run: dart pub global activate melos
 
       - name: Bootstrap Workspace
-        run: flutter run melos bootstrap
+        run: dart run melos bootstrap
 
       - name: Verify Publish Readiness
-        run: flutter run melos run publish-dry-run
+        run: dart run melos run publish-dry-run
 
       - name: Publish to pub.dev
         working-directory: packages/sznm_lints
-        run: flutter pub publish --force
+        run: dart pub publish --force
