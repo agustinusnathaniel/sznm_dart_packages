@@ -14,26 +14,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Setup Dart
-        uses: dart-lang/setup-dart@v1.7.2
-
-      - name: Install FVM
-        run: dart pub global activate fvm
-
-      - name: Use Flutter Version from .fvmrc
-        run: fvm use
+      - name: Setup Flutter
+        uses: koji-1009/setup-flutter@v1
+        with:
+          flutter-version-file: '.fvmrc'
 
       - name: Setup Melos
         run: dart pub global activate melos
 
       - name: Bootstrap Workspace
-        run: fvm dart run melos bootstrap
+        run: flutter run melos bootstrap
 
       - name: Check Format
-        run: fvm dart run melos run format-check
+        run: flutter run melos run format-check
 
       - name: Analyze
-        run: fvm dart run melos run analyze
+        run: flutter run melos run analyze
 
   verify:
     name: Verify Publish Readiness
@@ -43,23 +39,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Setup Dart
-        uses: dart-lang/setup-dart@v1.7.2
-
-      - name: Install FVM
-        run: dart pub global activate fvm
-
-      - name: Use Flutter Version from .fvmrc
-        run: fvm use
+      - name: Setup Flutter
+        uses: koji-1009/setup-flutter@v1
+        with:
+          flutter-version-file: '.fvmrc'
 
       - name: Setup Melos
         run: dart pub global activate melos
 
       - name: Bootstrap Workspace
-        run: fvm dart run melos bootstrap
+        run: flutter run melos bootstrap
 
       - name: Run Verification
         run: ./scripts/verify.sh
 
       - name: Publish Dry-Run
-        run: fvm dart run melos run publish-dry-run
+        run: flutter run melos run publish-dry-run

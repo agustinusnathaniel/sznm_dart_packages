@@ -17,24 +17,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Dart
-        uses: dart-lang/setup-dart@v1.7.2
-
-      - name: Install FVM
-        run: dart pub global activate fvm
-
-      - name: Use Flutter Version from .fvmrc
-        run: fvm use
+      - name: Setup Flutter
+        uses: koji-1009/setup-flutter@v1
+        with:
+          flutter-version-file: '.fvmrc'
 
       - name: Setup Melos
         run: dart pub global activate melos
 
       - name: Bootstrap Workspace
-        run: fvm dart run melos bootstrap
+        run: flutter run melos bootstrap
 
       - name: Verify Publish Readiness
-        run: fvm dart run melos run publish-dry-run
+        run: flutter run melos run publish-dry-run
 
       - name: Publish to pub.dev
         working-directory: packages/sznm_lints
-        run: fvm dart pub publish --force
+        run: flutter pub publish --force

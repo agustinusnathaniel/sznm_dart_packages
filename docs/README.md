@@ -71,30 +71,27 @@ sznm_dart_packages/
 
 ### GitHub Actions Setup
 
-For CI/CD workflows, use the latest official actions:
+For CI/CD workflows, use the `koji-1009/setup-flutter` action with built-in caching:
 
 ```yaml
 - name: Checkout
   uses: actions/checkout@v6
 
-- name: Setup Dart
-  uses: dart-lang/setup-dart@v1.7.2
-
-- name: Install FVM
-  run: dart pub global activate fvm
-
-- name: Use Flutter Version from .fvmrc
-  run: fvm use
+- name: Setup Flutter
+  uses: koji-1009/setup-flutter@v1
+  with:
+    flutter-version-file: '.fvmrc'
 ```
+
+**Features:**
+- ✅ Reads `.fvmrc` automatically
+- ✅ Caches Flutter SDK by default
+- ✅ Caches pub dependencies
+- ✅ Automatic cache key generation
 
 **Action versions used:**
 - `actions/checkout@v6` - Latest stable (Jan 2026)
-- `dart-lang/setup-dart@v1.7.2` - Latest stable (Mar 2026)
-
-This approach:
-- Uses the official `dart-lang/setup-dart` action
-- Installs FVM globally
-- Reads `.fvmrc` automatically to install the correct Flutter version
+- `koji-1009/setup-flutter@v1` - Latest stable with caching
 
 ---
 

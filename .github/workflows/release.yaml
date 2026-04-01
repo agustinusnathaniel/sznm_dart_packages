@@ -19,20 +19,16 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Dart
-        uses: dart-lang/setup-dart@v1.7.2
-
-      - name: Install FVM
-        run: dart pub global activate fvm
-
-      - name: Use Flutter Version from .fvmrc
-        run: fvm use
+      - name: Setup Flutter
+        uses: koji-1009/setup-flutter@v1
+        with:
+          flutter-version-file: '.fvmrc'
 
       - name: Setup Melos
         run: dart pub global activate melos
 
       - name: Bootstrap Workspace
-        run: fvm dart run melos bootstrap
+        run: flutter run melos bootstrap
 
       - name: Configure Git
         run: |
