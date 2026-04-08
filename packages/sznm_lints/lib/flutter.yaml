@@ -1,5 +1,10 @@
 include: package:flutter_lints/flutter.yaml
 
+formatter:
+  # Restore manual multiline formatting via trailing commas
+  # See: https://dart.dev/tools/dart-format
+  trailing_commas: preserve
+
 linter:
   rules:
     # Additional strict rules beyond flutter_lints
@@ -29,7 +34,6 @@ linter:
     - prefer_if_elements_to_conditional_expressions
     - prefer_null_aware_method_calls
     - prefer_single_quotes
-    - require_trailing_commas
     - sort_constructors_first
     - sort_unnamed_constructors_first
     - strict_top_level_inference
