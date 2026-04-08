@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-04-08
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`sznm_lints` - `v2.0.1`](#sznm_lints---v201)
+
+---
+
+#### `sznm_lints` - `v2.0.1`
+
+ - **REFACTOR**(lints): replace require_trailing_commas with formatter preserve setting. ([54bffc3b](https://github.com/agustinusnathaniel/sznm_dart_packages/commit/54bffc3bfb2363a679fc77f2126019877d3c95d4))
+
+
 ## 2026-04-02
 
 ### Changes

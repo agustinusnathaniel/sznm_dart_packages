@@ -1,3 +1,7 @@
+## 2.0.1
+
+ - **REFACTOR**(lints): replace require_trailing_commas with formatter preserve setting. ([54bffc3b](https://github.com/agustinusnathaniel/sznm_dart_packages/commit/54bffc3bfb2363a679fc77f2126019877d3c95d4))
+
 ## 2.0.0
 
  - **REFACTOR**: update to Flutter 3.41.5, Dart 3.11, Melos 7.x ([#3](https://github.com/agustinusnathaniel/sznm_dart_packages/issues/3)). ([a76a0aa3](https://github.com/agustinusnathaniel/sznm_dart_packages/commit/a76a0aa37f4835c58b8f82260b2bb1180a2d4c99))
